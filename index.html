@@ -2,10 +2,24 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link href="bootstrap-4.3.1-dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Utilisation du framework Bootstrap CSS -->
+    <link href="bootstrap-4.3.1-dist/css/bootstrap-min.css" rel="stylesheet">
     <title>Le jeu des capitales</title>
 </head>
 <body>
+    <div class="container">
+        <div class="row">
+            <p>Nom pays : <span id="nameState"></span></p>
+            <p>Nom capitale : <span id="nameCapital"></span></p>
+        </div>
+    </div>
 
+    <!-- /!\ Toujours mettre a la fin du document html, les scripts -->
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>
+    <script src="oXHR.js"></script>
+    <script src="generateStateName.js"></script>
 </body>
 </html>
