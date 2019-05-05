@@ -3,18 +3,36 @@
 <head>
 	<title>Leaflet.js avec couche Stamen Watercolor</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+	<link href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" rel="stylesheet">
 	<!-- lien vers la bibliothèque bootstrap -->
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="well well-lg">
-            Vous devez localiser : <strong id="nameState"></strong>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="well well-lg">
+                <div class="col-md-10">
+                    <h1 class="text-center">THE GAME</h1>
+                </div>
+                <div>
+                    <button class="btn btn-primary">Inscription</button>
+                    <button class="btn btn-default">Connexion</button>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="container">
-        <div id="maDiv" style="width: 800px; height: 600px"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="well well-lg">
+                    Vous devez localiser : <strong id="nameState"></strong>
+                </div>
+                <div id="maDiv" class="col-lg-12" style="height: 70vh"></div>
+            </div>
+            <div>
+                <h2 class="text-center">Historique</h2>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>

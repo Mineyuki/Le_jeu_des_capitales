@@ -2,6 +2,7 @@
  * Documentations :
  * https://leafletjs.com/examples/geojson/
  * https://leafletjs.com/reference-1.4.0.html
+ * http://blog.mastermaps.com/2014/08/showing-geotagged-photos-on-leaflet-map.html
  */
 $(document).ready(function()
 {
@@ -79,7 +80,10 @@ $(document).ready(function()
     // Initilisation d'un popup
     var popup = L.popup();
 
-    var latlong;
+    var latlong; // Variable stockant les coordonnes d'un pays
+    var circle; // Variable stockant le cercle concentrique d'un pays
+    var contour; // Variable stockant le contour d'un pays
+    var clickMap = 0;
 
     // Fonction de conversion au format GeoJSON
     function coordGeoJSON(latlng,precision) {
@@ -90,35 +94,42 @@ $(document).ready(function()
 
     // Fonction qui réagit au clic sur la carte (e contiendra les données liées au clic)
     function onMapClick(e) {
-        var cca3 = world[index].cca3;
+        if(clickMap == 0)
+        {
+            var cca3 = world[index].cca3;
 
-        latlong = e.latlng;
-        surligner(cca3);
+            latlong = e.latlng;
+            surligner(cca3);
 
-        map.setZoom(2);
+            map.setZoom(2);
 
-        // Cree un cercle sur le pays
-        var circle = L.circle(world[index].latlng,{
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5,
-            radius: 500000}).addTo(map);
+            // Cree un cercle sur le pays
+            circle = L.circle(world[index].latlng,{
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 500000}).addTo(map);
 
-        var distance = latlong.distanceTo(L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))/1000;
+            var distance = latlong.distanceTo(L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))/1000;
 
-        popup.setLatLng(e.latlng)
-            .setContent("Vous vous êtes trompés de <br/> "
-                + distance
-                + " km.<br/>"
-                + latlong
-                + "<br/>"
-                + L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))
-            .openOn(map);
-
-        executeRequest(readNext);
-
-        /*map.closePopup();
-        marker.remove();*/
+            popup.setLatLng(e.latlng)
+                .setContent("Vous vous êtes trompés de <br/> "
+                    + distance
+                    + " km.<br/>"
+                    + latlong
+                    + "<br/>"
+                    + L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))
+                .openOn(map);
+            clickMap = 1;
+        }
+        else
+        {
+            clickMap = 0;
+            map.removeLayer(circle); // Enleve le cercle concentrique
+            map.removeLayer(contour); // Enleve le contour
+            map.closePopup(); // Ferme le popup
+            executeRequest(readNext); // Pays suivant
+        }
     }
 
     function surligner(cca3) {
@@ -137,9 +148,9 @@ $(document).ready(function()
         {
             $.each(data,function(i,field)
             {
-                if(i=="features")
+                if(i === "features")
                 { // Recupere les coordonnes du pays et dessines son contour
-                    L.geoJSON(field[0].geometry,{
+                    contour = L.geoJSON(field[0].geometry,{
                         "color": "#ff7800",
                         "weight": 4,
                         "opacity": 0.65
