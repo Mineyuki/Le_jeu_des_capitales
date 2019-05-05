@@ -83,7 +83,8 @@ $(document).ready(function()
     var latlong; // Variable stockant les coordonnes d'un pays
     var circle; // Variable stockant le cercle concentrique d'un pays
     var contour; // Variable stockant le contour d'un pays
-    var clickMap = 0;
+    var progress = 0; // Variable pour la changer la barre de progression
+    var clickMap = 0; // Variable pour le changement d'etat lors d'un click
 
     // Fonction de conversion au format GeoJSON
     function coordGeoJSON(latlng,precision) {
@@ -96,6 +97,8 @@ $(document).ready(function()
     function onMapClick(e) {
         if(clickMap == 0)
         {
+            clickMap = 1;
+
             var cca3 = world[index].cca3;
 
             latlong = e.latlng;
@@ -120,11 +123,21 @@ $(document).ready(function()
                     + "<br/>"
                     + L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))
                 .openOn(map);
-            clickMap = 1;
+
+            progress = progress + 15; // Ajoute 15% a chaque fois
+            $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
+
+            // Ajoute le nom du pays dans l'historique
+            $('#history').append('<p>'
+                + (world[index].name).common
+                + ' : '
+                + distance
+                + '</p>');
         }
         else
         {
             clickMap = 0;
+            map.setZoom(2);
             map.removeLayer(circle); // Enleve le cercle concentrique
             map.removeLayer(contour); // Enleve le contour
             map.closePopup(); // Ferme le popup
