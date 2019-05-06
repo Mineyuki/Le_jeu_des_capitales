@@ -133,6 +133,10 @@ $(document).ready(function()
                 + ' : '
                 + distance
                 + '</p>');
+
+            $('#wikipedia').html('<iframe id="Wikipedia" title="Wikipedia" src="https://fr.wikipedia.org/wiki/'
+            + (world[index].name).common
+            + '" style="height: 70vh" class="col-md-12"></iframe>');
         }
         else
         {
