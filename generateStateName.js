@@ -85,6 +85,7 @@ $(document).ready(function()
     var contour; // Variable stockant le contour d'un pays
     var progress = 0; // Variable pour la changer la barre de progression
     var clickMap = 0; // Variable pour le changement d'etat lors d'un click
+    var counter = 1;
 
     // Fonction de conversion au format GeoJSON
     function coordGeoJSON(latlng,precision) {
@@ -95,58 +96,120 @@ $(document).ready(function()
 
     // Fonction qui réagit au clic sur la carte (e contiendra les données liées au clic)
     function onMapClick(e) {
-        if(clickMap == 0)
+        if(counter <= 7)
         {
-            clickMap = 1;
+            if(clickMap == 0)
+            {
+                clickMap = 1;
 
-            var cca3 = world[index].cca3;
+                var cca3 = world[index].cca3;
+                var state = (world[index].name).common;
 
-            latlong = e.latlng;
-            surligner(cca3);
+                latlong = e.latlng;
+                surligner(cca3);
 
-            map.setZoom(2);
+                map.setZoom(2);
 
-            // Cree un cercle sur le pays
-            circle = L.circle(world[index].latlng,{
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 500000}).addTo(map);
+                // Cree un cercle sur le pays
+                circle = L.circle(world[index].latlng,{
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 500000}).addTo(map);
 
-            var distance = latlong.distanceTo(L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))/1000;
+                var distance = latlong.distanceTo(L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))/1000;
 
-            popup.setLatLng(e.latlng)
-                .setContent("Vous vous êtes trompés de <br/> "
+                popup.setLatLng(e.latlng)
+                    .setContent("Vous vous êtes trompés de <br/> "
+                        + distance
+                        + " km.<br/>"
+                        + latlong
+                        + "<br/>"
+                        + L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))
+                    .openOn(map);
+
+                progress = progress + 15; // Ajoute 15% a chaque fois
+                $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
+
+                // Ajoute le nom du pays dans l'historique
+                $('#history').append('<p>'
+                    + state.replace(' ', '_')
+                    + ' : '
                     + distance
-                    + " km.<br/>"
-                    + latlong
-                    + "<br/>"
-                    + L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))
-                .openOn(map);
+                    + '</p>');
 
-            progress = progress + 15; // Ajoute 15% a chaque fois
-            $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
+                $('#wikipedia').html('<iframe title="Wikipedia" src="https://en.wikipedia.org/wiki/'
+                    + (world[index].name).common
+                    + '" style="height: 50vh" class="col-md-12"></iframe>');
 
-            // Ajoute le nom du pays dans l'historique
-            $('#history').append('<p>'
-                + (world[index].name).common
-                + ' : '
-                + distance
-                + '</p>');
+                $.ajaxPrefilter(function (options) {
+                    if (options.crossDomain && jQuery.support.cors) {
+                        var https = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+                        options.url = https + '//cors-anywhere.herokuapp.com/' + options.url;
+                    }
+                });
 
-            $('#wikipedia').html('<iframe id="Wikipedia" title="Wikipedia" src="https://fr.wikipedia.org/wiki/'
-            + (world[index].name).common
-            + '" style="height: 70vh" class="col-md-12"></iframe>');
+                $("#image0").html('<img src="http://www.travel-images.com/pht/'
+                    + state.replace(' ', '-').toLowerCase()
+                    + '1.jpg" style="height: 50vh">');
+                $("#image1").html('<img src="http://www.travel-images.com/pht/'
+                    + state.replace(' ', '-').toLowerCase()
+                    + '2.jpg" style="height: 50vh">');
+                $("#image2").html('<img src="http://www.travel-images.com/pht/'
+                    + state.replace(' ', '-').toLowerCase()
+                    + '3.jpg" style="height: 50vh">');
+
+
+                /*$.get(
+                    'https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=' + state.replace(' ', '_') + '&callback=?',
+
+                    function (response) {
+                        var m;
+                        var urls = [];
+                        var regex = /<img.*?src=\\"(.*?)\\"/gmi;
+                        var index = 0;
+
+                        while (m = regex.exec(response)) {
+                            urls.push(m[1]);
+                        }
+
+                        urls.forEach(function (url) {
+                            if(index == 0)
+                            {
+                                $(".carousel-indicators").append('<li data-targer="#myCarrousel" data-slide-to="'
+                                                                + index
+                                                                + '" class="active"></li>\n');
+                                $(".carousel-inner").append('<div class="item active"><img src="'
+                                                            + window.location.protocol
+                                                            + url
+                                                            + '"></div>');
+                            }
+                            else
+                            {
+                                $(".carousel-indicators").append('<li data-targer="#myCarrousel" data-slide-to="'
+                                                                + index
+                                                                + '></li>\n');
+                                $(".carousel-inner").append('<div class="item"><img src="'
+                                    + window.location.protocol
+                                    + url
+                                    + '" style="height: 50vh"></div>');
+                            }
+                            index = index + 1;
+                        });
+                    });*/
+            }
+            else
+            {
+                clickMap = 0;
+                counter = counter + 1;
+                map.setZoom(2);
+                map.removeLayer(circle); // Enleve le cercle concentrique
+                map.removeLayer(contour); // Enleve le contour
+                map.closePopup(); // Ferme le popup
+                executeRequest(readNext); // Pays suivant
+            }
         }
-        else
-        {
-            clickMap = 0;
-            map.setZoom(2);
-            map.removeLayer(circle); // Enleve le cercle concentrique
-            map.removeLayer(contour); // Enleve le contour
-            map.closePopup(); // Ferme le popup
-            executeRequest(readNext); // Pays suivant
-        }
+
     }
 
     function surligner(cca3) {
@@ -179,5 +242,4 @@ $(document).ready(function()
 
     // Association Evenement/Fonction handler
     map.on('click', onMapClick);
-
 });

@@ -44,8 +44,28 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="well well-lg">
-                    <h2 class="text-center">Wikipedia</h2>
+                <div id="myCarrousel" class="carousel slide" data-ride="carousel" style="height: 50vh">
+                    <!-- Indicateurs -->
+                    <ol class="carousel-indicators">
+                        <li data-targer="#myCarrousel" data-slide-to="0" class="active"></li>
+                        <li data-targer="#myCarrousel" data-slide-to="1"></li>
+                        <li data-targer="#myCarrousel" data-slide-to="2"></li>
+                    </ol>
+                    <!-- Wrapper pour les slides -->
+                    <div class="carousel-inner" role="listbox">
+                        <div id="image0" class="item active"></div>
+                        <div id="image1" class="item"></div>
+                        <div id="image2" class="item"></div>
+                    </div>
+                    <!-- Les controles droite et gauche -->
+                    <a class="left carousel-control" href="#myCarrousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Précédent</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarrousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Suivant</span>
+                    </a>
                 </div>
                 <div id="wikipedia"></div>
             </div>
@@ -53,6 +73,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.js"></script>
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script src="/js/leaflet-0.7.2/leaflet.ajax.min.js"></script>
     <!-- lien vers le script contenant la fonction getXMLHttpRequest-->
