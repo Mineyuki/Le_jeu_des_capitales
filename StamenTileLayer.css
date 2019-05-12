@@ -1,0 +1,35 @@
+body
+{
+    background-color: #FFFFE0;
+}
+
+.navbar-center {
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+}
+
+.center-vertical
+{
+    padding-top: 40vh;
+}
+
+.height-70
+{
+    height: 70vh;
+}
+
+.height-40
+{
+    height: 40vh;
+}
+
+#wikipedia
+{
+    padding-top: 5vh;
+}
+
+.button-padding-bottom
+{
+    padding-bottom: 1vh;
+}
