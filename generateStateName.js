@@ -83,11 +83,9 @@ function readNext()
     else if ($('#playCapital').data('clicked'))
     {
         $('#nameQuestion').text(world[index].capital);
-        if (world[index].capital == "") {
-            readNext();
-        }
+        existCity(world[index].capital);
         map.setView(new L.LatLng(world[index].latlng[0],world[index].latlng[1]), 6);
-        surligner(world[index].cca3);
+        circleState(world[index].cca3);
     }
 }
 
@@ -132,7 +130,10 @@ var contour; // Variable stockant le contour d'un pays
 var progress = 0; // Variable pour la changer la barre de progression
 var clickMap = 0; // Variable pour le changement d'etat lors d'un click
 var counter = 0; // Variable pour le compte des questions
-var city;
+var maxQuestion = 7; // Nombre maximale de questions possible
+var radiusCity = 50000; // Rayon du cercle pour la ville
+var radiusState = 500000; // Rayon du cercle pour le pays
+var score = 0; // Variable stockant le score
 
 // Fonction de conversion au format GeoJSON
 function coordGeoJSON(latlng,precision) {
@@ -141,47 +142,53 @@ function coordGeoJSON(latlng,precision) {
         L.Util.formatNum(latlng.lat, precision) + ']';
 }
 
-// Fonction qui réagit au clic sur la carte (e contiendra les données liées au clic)
+/*
+ * Fonction qui réagit au clic sur la carte (e contiendra les données liées au clic)
+ */
 function onMapClick(e) {
-    if(counter < 7)
-    {
+    if(counter < maxQuestion)
+    { // Nombre de question autorise
         if(clickMap == 0)
-        {
+        { // Donne la reponse
+            var coordinates; // Variable contenant les coordonnes
+            var state = (world[index].name).common; // Variable contenant le nom du pays
+            var result; // Variable contenant la reponse de la question
+
             progress = progress + 15; // Ajoute 15% a chaque fois
             $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
 
-            clickMap = 1;
-            latlong = e.latlng;
-
-            var coordinates;
-            var state = (world[index].name).common;
-            var result;
+            clickMap = 1; // Efface la reponse
+            latlong = e.latlng; // Recupere les coordonnes de la carte
 
             if($('#playState').data('clicked'))
-            {
-                map.setZoom(2);
-                coordinates = world[index].latlng;
-                result = state;
+            { // Si on est au questionnaire des pays
+                map.setZoom(2); // Zoom a 2
+                coordinates = world[index].latlng; // coordonnes du pays
+                result = state; // Reponse a la question
+                // Distance entre le point central et le point clique
                 var distance = latlong.distanceTo(L.latLng(coordinates[0],coordinates[1]))/1000;
-                printCircle(coordinates,500000);
+                printCircle(coordinates,radiusState); // Affiche un cercle d'un certain rayon
+                // Affiche un popup sur la carte
                 popup.setLatLng(e.latlng)
                 .setContent("Vous vous êtes trompés de <br/> "
                     + distance
                     + " km.<br/>")
                 .openOn(map);
+                updateScore(distance, radiusState);
             }
             else if ($('#playCapital').data('clicked'))
-            {
-                map.setZoom(6);
-                result = world[index].capital;
-                getCoordinatesCity(result);
+            { // Si on est au questionnaire des capitales
+                map.setZoom(6); // Zoom a 6
+                result = world[index].capital; // Reponse a la question
+                getCoordinatesCity(result,e); // Donne les coordonnes de la ville
             }
 
-            // Ajoute le nom du pays dans l'historique
+            // Ajoute la reponse dans l'historique
             $('#history').append('<div class="row button-padding-bottom"><button type="button" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-info">'
                 + result
                 + '</button></div>');
 
+            // Ajoute une frame pour wikipedia
             $('#wikipedia').html('<iframe title="Wikipedia" src="https://en.wikipedia.org/wiki/'
                 + result
                 + '"class="height-40 col-xs-12 col-sm-12 col-md-12"></iframe>');
@@ -193,6 +200,7 @@ function onMapClick(e) {
                 }
             });
 
+            // Change les images du carousel
             $("#image0").html('<img src="http://www.travel-images.com/pht/'
                 + result.replace(' ', '-').toLowerCase().sansAccent()
                 + '1.jpg">');
@@ -204,14 +212,17 @@ function onMapClick(e) {
                 + '3.jpg">');
         }
         else
-        {
-            clickMap = 0;
-            counter = counter + 1;
+        { // Efface tout et change de question
+            clickMap = 0; // Donne la reponse
+            counter = counter + 1; // Incremente le compteur de question
             map.removeLayer(circle); // Enleve le cercle concentrique
-            map.removeLayer(contour); // Enleve le contour
-            map.closePopup(); // Ferme le popup
-            if(counter < 7)
+            if ($('#playCapital').data('clicked'))
             {
+                map.removeLayer(contour); // Enleve le contour
+            }
+            map.closePopup(); // Ferme le popup
+            if(counter < maxQuestion)
+            { // N'affiche pas la question apres la derniere
                 executeRequest(readNext); // Pays suivant
             }
         }
@@ -219,7 +230,11 @@ function onMapClick(e) {
 
 }
 
-function surligner(cca3)
+/*
+ * Cree un contour pour le pays
+ * @param cca3 Acronyme du pays en 3 lettres
+ */
+function circleState(cca3)
 {
     // Acces a chaque donnee de chaque pays
     $.getJSON("countries-master/data/"+cca3.toLowerCase()+".geo.json",function (data)
@@ -234,7 +249,9 @@ function surligner(cca3)
 }
 
 /*
- * Radius : en metre
+ * Dessines un cercle sur la carte
+ * @param coordinates Coordonnes fournis
+ * @param rad Rayon en metre
  */
 function printCircle(coordinates, rad)
 {
@@ -245,22 +262,101 @@ function printCircle(coordinates, rad)
         radius: rad}).addTo(map);
 }
 
-function getCoordinatesCity(capital)
+/*
+ * Donne les coordonnes de la ville
+ * @param capital Nom de la ville
+ */
+function getCoordinatesCity(capital, e)
 {
     $.getJSON("geojson-world-master/capitals.geo.json", function (data)
-    {
+    { // Recupere les donnees de la capitale du JSON
+        // Trouve les donnes de la capitale qu'on souhaite
         var getCity = (data.features).find(state => state.properties.city === capital[0]);
-        var coordinates = [];
+        var coordinates = []; // Coordoonees
+        // Interverti les coordonnes - les coordonnees ont ete inverses dans le fichier
         coordinates[0] = getCity.geometry.coordinates[1];
         coordinates[1] = getCity.geometry.coordinates[0];
-        printCircle(coordinates,50000);
+        printCircle(coordinates,radiusCity); // Dessine un cercle
         var distance = latlong.distanceTo(L.latLng(getCity.geometry.coordinates[1],getCity.geometry.coordinates[0]))/1000;
         popup.setLatLng(e.latlng)
             .setContent("Vous vous êtes trompés de <br/> "
                 + distance
                 + " km.<br/>")
             .openOn(map);
+        updateScore(distance, radiusCity);
     });
+}
+
+function existCity(capital)
+{
+    $.getJSON("geojson-world-master/capitals.geo.json", function (data)
+    {
+        if((data.features).find(state => state.properties.city === capital[0]) == undefined)
+        {
+            readNext();
+        }
+    });
+}
+
+/*
+ * Met a jour le score obtenu
+ * @param distance Distance entre le point clique et le point centrale du cercle
+ * @param radius Rayon du cercle concentrique
+ */
+function updateScore(distance, radius)
+{
+    radius = radius / 1000;
+
+    if(distance == 0)
+    {
+        score = score + 100;
+    }
+    else if (distance <= radius * 0.10)
+    {
+        score = score + 90;
+    }
+    else if (distance <= radius * 0.20)
+    {
+        score = score + 80;
+    }
+    else if (distance <= radius * 0.30)
+    {
+        score = score + 70;
+    }
+    else if (distance <= radius * 0.40)
+    {
+        score = score + 60;
+    }
+    else if (distance <= radius * 0.50)
+    {
+        score = score + 50;
+    }
+    else if (distance <= radius * 0.60)
+    {
+        score = score + 40;
+    }
+    else if (distance <= radius * 0.70)
+    {
+        score = score + 30;
+    }
+    else if (distance <= radius * 0.80)
+    {
+        score = score + 20;
+    }
+    else if (distance <= radius * 0.90)
+    {
+        score = score + 10;
+    }
+    else if (distance <= radius)
+    {
+        score = score + 1;
+    }
+    else
+    {
+        score = score + 0;
+    }
+
+    $('#score').text(score);
 }
 
 // Association Evenement/Fonction handler
