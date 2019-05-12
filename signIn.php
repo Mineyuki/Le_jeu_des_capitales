@@ -23,7 +23,7 @@
         {
             session_start();
             $_SESSION['email'] = $result['mail'];
-            header('Location : index.html');
+            header('Location : StamenTileLayer.html');
         }
     }
     else

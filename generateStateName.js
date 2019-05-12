@@ -4,7 +4,6 @@
  * https://leafletjs.com/reference-1.4.0.html
  * http://blog.mastermaps.com/2014/08/showing-geotagged-photos-on-leaflet-map.html
  */
-
 $(document).ready(function()
 {
     $('#principalPannel').hide();
@@ -20,12 +19,18 @@ $(document).ready(function()
     {
         $('#thirdPannel').hide(500);
         $('#principalPannel').show(1000);
+        $(this).data('clicked', true);
+        executeRequest(readNext);
+        map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 
     $('#playCapital').click(function ()
     {
         $('#thirdPannel').hide(500);
         $('#principalPannel').show(1000);
+        $(this).data('clicked', true);
+        executeRequest(readNext);
+        map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 });
 
@@ -35,13 +40,13 @@ $(document).ready(function()
 ************************************************************************************************************************
  */
 
+var index = 0;
+var world = [];
+
 function getRandomInt(max)
 {
     return Math.floor(Math.random() * Math.floor(max));
 }
-
-var index = 0;
-var world = [];
 
 function executeRequest(callback)
 {
@@ -70,17 +75,21 @@ function readNext()
 {
     var lengthWorld = world.length;
     index = getRandomInt(lengthWorld);
-
-    $('#nameState').text((world[index].name).common);
-    $('#nameCapital').text(world[index].capital);
+    if($('#playState').data('clicked'))
+    {
+        $('#nameQuestion').text((world[index].name).common);
+        map.setZoom(2);
+    }
+    else if ($('#playCapital').data('clicked'))
+    {
+        $('#nameQuestion').text(world[index].capital);
+        if (world[index].capital == "") {
+            readNext();
+        }
+        map.setView(new L.LatLng(world[index].latlng[0],world[index].latlng[1]), 6);
+        surligner(world[index].cca3);
+    }
 }
-
-executeRequest(readNext);
-
-$('#buttonChangeState').click(function()
-{
-    executeRequest(readNext);
-});
 
 /*
 ************************************************************************************************************************
@@ -109,9 +118,6 @@ var map = new L.Map('maDiv', {
     maxBounds: bornes
 });
 
-// Affichage de la carte
-map.addLayer(coucheStamenWatercolor);
-
 // Juste pour changer la forme du curseur par défaut de la souris
 $('#maDiv').css({'cursor': 'crosshair'})
 
@@ -126,7 +132,7 @@ var contour; // Variable stockant le contour d'un pays
 var progress = 0; // Variable pour la changer la barre de progression
 var clickMap = 0; // Variable pour le changement d'etat lors d'un click
 var counter = 0; // Variable pour le compte des questions
-var historyState = []; // Variable pour le stockage des noms des pays
+var city;
 
 // Fonction de conversion au format GeoJSON
 function coordGeoJSON(latlng,precision) {
@@ -141,42 +147,43 @@ function onMapClick(e) {
     {
         if(clickMap == 0)
         {
+            progress = progress + 15; // Ajoute 15% a chaque fois
+            $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
+
             clickMap = 1;
-
-            var cca3 = world[index].cca3;
-            var state = (world[index].name).common;
-            historyState[counter] = (world[index].name).common;
-
             latlong = e.latlng;
-            surligner(cca3);
 
-            map.setZoom(2);
+            var coordinates;
+            var state = (world[index].name).common;
+            var result;
 
-            // Cree un cercle sur le pays
-            circle = L.circle(world[index].latlng,{
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 500000}).addTo(map);
-
-            var distance = latlong.distanceTo(L.latLng((world[index].latlng)[0],(world[index].latlng)[1]))/1000;
-
-            popup.setLatLng(e.latlng)
+            if($('#playState').data('clicked'))
+            {
+                map.setZoom(2);
+                coordinates = world[index].latlng;
+                result = state;
+                var distance = latlong.distanceTo(L.latLng(coordinates[0],coordinates[1]))/1000;
+                printCircle(coordinates,500000);
+                popup.setLatLng(e.latlng)
                 .setContent("Vous vous êtes trompés de <br/> "
                     + distance
                     + " km.<br/>")
                 .openOn(map);
-
-            progress = progress + 15; // Ajoute 15% a chaque fois
-            $('.progress-bar-info').css("width",progress+'%'); // Change le css associe a la barre de progression
+            }
+            else if ($('#playCapital').data('clicked'))
+            {
+                map.setZoom(6);
+                result = world[index].capital;
+                getCoordinatesCity(result);
+            }
 
             // Ajoute le nom du pays dans l'historique
             $('#history').append('<div class="row button-padding-bottom"><button type="button" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-info">'
-                + state
+                + result
                 + '</button></div>');
 
             $('#wikipedia').html('<iframe title="Wikipedia" src="https://en.wikipedia.org/wiki/'
-                + state
+                + result
                 + '"class="height-40 col-xs-12 col-sm-12 col-md-12"></iframe>');
 
             $.ajaxPrefilter(function (options) {
@@ -187,59 +194,19 @@ function onMapClick(e) {
             });
 
             $("#image0").html('<img src="http://www.travel-images.com/pht/'
-                + state.replace(' ', '-').toLowerCase().sansAccent()
+                + result.replace(' ', '-').toLowerCase().sansAccent()
                 + '1.jpg">');
             $("#image1").html('<img src="http://www.travel-images.com/pht/'
-                + state.replace(' ', '-').toLowerCase().sansAccent()
+                + result.replace(' ', '-').toLowerCase().sansAccent()
                 + '2.jpg">');
             $("#image2").html('<img src="http://www.travel-images.com/pht/'
-                + state.replace(' ', '-').toLowerCase().sansAccent()
+                + result.replace(' ', '-').toLowerCase().sansAccent()
                 + '3.jpg">');
-
-
-            /*$.get(
-                'https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=' + state.replace(' ', '_') + '&callback=?',
-
-                function (response) {
-                    var m;
-                    var urls = [];
-                    var regex = /<img.*?src=\\"(.*?)\\"/gmi;
-                    var index = 0;
-
-                    while (m = regex.exec(response)) {
-                        urls.push(m[1]);
-                    }
-
-                    urls.forEach(function (url) {
-                        if(index == 0)
-                        {
-                            $(".carousel-indicators").append('<li data-targer="#myCarrousel" data-slide-to="'
-                                                            + index
-                                                            + '" class="active"></li>\n');
-                            $(".carousel-inner").append('<div class="item active"><img src="'
-                                                        + window.location.protocol
-                                                        + url
-                                                        + '"></div>');
-                        }
-                        else
-                        {
-                            $(".carousel-indicators").append('<li data-targer="#myCarrousel" data-slide-to="'
-                                                            + index
-                                                            + '></li>\n');
-                            $(".carousel-inner").append('<div class="item"><img src="'
-                                + window.location.protocol
-                                + url
-                                + '" style="height: 50vh"></div>');
-                        }
-                        index = index + 1;
-                    });
-                });*/
         }
         else
         {
             clickMap = 0;
             counter = counter + 1;
-            map.setZoom(2);
             map.removeLayer(circle); // Enleve le cercle concentrique
             map.removeLayer(contour); // Enleve le contour
             map.closePopup(); // Ferme le popup
@@ -257,17 +224,42 @@ function surligner(cca3)
     // Acces a chaque donnee de chaque pays
     $.getJSON("countries-master/data/"+cca3.toLowerCase()+".geo.json",function (data)
     {
-        $.each(data,function(i,field)
-        {
-            if(i === "features")
-            { // Recupere les coordonnes du pays et dessines son contour
-                contour = L.geoJSON(field[0].geometry,{
-                    "color": "#ff7800",
-                    "weight": 4,
-                    "opacity": 0.65
-                }).addTo(map);
-            }
-        });
+        // Recupere les coordonnes du pays et dessines son contour
+        contour = L.geoJSON(data.features[0].geometry,{
+            "color": "#ff7800",
+            "weight": 5,
+            "opacity": 1
+        }).addTo(map);
+    });
+}
+
+/*
+ * Radius : en metre
+ */
+function printCircle(coordinates, rad)
+{
+    circle = L.circle(coordinates,{
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: rad}).addTo(map);
+}
+
+function getCoordinatesCity(capital)
+{
+    $.getJSON("geojson-world-master/capitals.geo.json", function (data)
+    {
+        var getCity = (data.features).find(state => state.properties.city === capital[0]);
+        var coordinates = [];
+        coordinates[0] = getCity.geometry.coordinates[1];
+        coordinates[1] = getCity.geometry.coordinates[0];
+        printCircle(coordinates,50000);
+        var distance = latlong.distanceTo(L.latLng(getCity.geometry.coordinates[1],getCity.geometry.coordinates[0]))/1000;
+        popup.setLatLng(e.latlng)
+            .setContent("Vous vous êtes trompés de <br/> "
+                + distance
+                + " km.<br/>")
+            .openOn(map);
     });
 }
 

@@ -26,7 +26,7 @@
                     $insertUser->execute();
 
                     $message = 'Creation compte réussie';
-                    header('Location: signIn.php');
+                    header('Location: StamenTileLayer.php');
                 }
                 else
                 {
