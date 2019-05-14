@@ -22,7 +22,7 @@
                         <label for="password2">Confirmer votre mot de passe</label>
                         <input type="password" class="form-control" id="password2" placeholder="Confirmer votre mot de passe"/>
                     </div>
-                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary">S'inscrire</button>
+                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="signUpForm">S'inscrire</button>
                 </fieldset>
             </form>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
@@ -57,7 +57,6 @@
                     $insertUser->execute();
 
                     $messageSignUp = 'Creation compte réussie';
-                    header('Location: index.html');
                 }
                 else
                 {

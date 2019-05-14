@@ -18,7 +18,7 @@
                         <label for="password">Mot de passe</label>
                         <input type="password" class="form-control" id="password" placeholder="Votre mot de passe"/>
                     </div>
-                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary">Connexion</button>
+                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="signInForm">Connexion</button>
                 </fieldset>
             </form>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
