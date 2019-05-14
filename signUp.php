@@ -1,8 +1,39 @@
+    <div class="container-fluid center-vertical" id="signUp">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+            <form id="signUpForm" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 form-vertical" action="" method="post">
+                <fieldset>
+                    <legend>Inscription :</legend>
+                    <?php
+                        if(isset($messageSignUp))
+                        {
+                            echo '<p class="alert alert-warning">'.$messageSignUp.'</p>';
+                        }
+                    ?>
+                    <div class="form-group">
+                        <label for="emailSignUp">Adresse email</label>
+                        <input type="email" class="form-control" id="emailSignUp" placeholder="Votre adresse mail"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password1">Mot de passe</label>
+                        <input type="password" class="form-control" id="password1" placeholder="Votre mot de passe"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Confirmer votre mot de passe</label>
+                        <input type="password" class="form-control" id="password2" placeholder="Confirmer votre mot de passe"/>
+                    </div>
+                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary">S'inscrire</button>
+                </fieldset>
+            </form>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+        </div>
+    </div>
+
 <?php
     // Demande utilisation identificationBDD.php
     require_once('identificationBDD.php');
 
-    if(isset($_POST['signUp']) and
+    if(isset($_POST['signUpForm']) and
         trim($_POST['email']) != "" and
         trim($_POST['password1']) != "" and
         trim($_POST['password2']) != "")
@@ -25,28 +56,26 @@
                     $insertUser->bindValue(':password',$password1);
                     $insertUser->execute();
 
-                    $message = 'Creation compte réussie';
-                    header('Location: StamenTileLayer.php');
+                    $messageSignUp = 'Creation compte réussie';
+                    header('Location: index.html');
                 }
                 else
                 {
-                    $message = 'Mot de passe différent !';
+                    $messageSignUp = 'Mot de passe différent !';
                 }
             }
             else
             {
-                $message = 'Compte existant !';
+                $messageSignUp = 'Compte existant !';
             }
         }
         else
         {
-            $message = 'Adresse mail non valide !';
+            $messageSignUp = 'Adresse mail non valide !';
         }
     }
     else
     {
-        $message = 'Veuillez renseigner les champs';
+        $messageSignUp = 'Veuillez renseigner les champs !';
     }
-
-    echo '<p>'.$message.'</p>';
 ?>

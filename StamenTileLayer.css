@@ -9,9 +9,15 @@ body
     transform: translatex(-50%);
 }
 
+.div-padding-top-10
+{
+    padding-top: 10vh;
+}
+
 .center-vertical
 {
     padding-top: 40vh;
+    padding-bottom: 40vh;
 }
 
 .height-70

@@ -8,6 +8,8 @@ $(document).ready(function()
 {
     $('#principalPannel').hide();
     $('#thirdPannel').hide();
+    $('#signUp').hide();
+    $('#signIn').hide();
 
     $('#play').click(function ()
     {
@@ -31,6 +33,54 @@ $(document).ready(function()
         $(this).data('clicked', true);
         executeRequest(readNext);
         map.addLayer(coucheStamenWatercolor); // Affichage de la carte
+    });
+
+    $('#signInLink').click(function ()
+    {
+        $('#signUp').hide(500);
+        $('#signIn').show(1000);
+    });
+
+    $('#signUpLink').click(function ()
+    {
+        $('#signIn').hide(500);
+        $('#signUp').show(1000);
+    });
+
+    // Pour tous les liens commençant par #.
+    $("a[href^='#']").click(function (e) {
+        var
+            yPos,
+            yInitPos,
+            target = ($($(this).attr("href") + ":first"));
+
+        // On annule le comportement initial au cas ou la base soit différente de la page courante.
+        e.preventDefault();
+
+        yInitPos = $(window).scrollTop();
+
+        // On ajoute le hash dans l'url.
+        window.location.hash = $(this).attr("href");
+
+        // Comme il est possible que l'ajout du hash perturbe le défilement, on va forcer le scrollTop à son endroit inital.
+        $(window).scrollTop(yInitPos);
+
+        // On cible manuellement l'ancre pour en extraire sa position.
+        // Si c'est un ID on l'obtient.
+        target = ($($(this).attr("href") + ":first"));
+
+        // Sinon on cherche l'ancre dans le name d'un a.
+        if (target.length == 0) {
+            target = ($("a[name=" + $(this).attr("href").replace(/#/gi,"") + "]:first"))
+        }
+
+        // Si on a trouvé un name ou un id, on défile.
+        if (target.length == 1) {
+            yPos = target.offset().top; // Position de l'ancre.
+
+            // On anime le défilement jusqu'à l'ancre.
+            $('html,body').animate({ scrollTop: yPos - 40 }, 1000); // On décale de 40 pixels l'affichage pour ne pas coller le bord haut de l'affichage du navigateur et on défile en 1 seconde jusqu'à l'ancre.
+        }
     });
 });
 
@@ -202,13 +252,13 @@ function onMapClick(e) {
 
             // Change les images du carousel
             $("#image0").html('<img src="http://www.travel-images.com/pht/'
-                + result.replace(' ', '-').toLowerCase().sansAccent()
+                + state.replace(' ', '').toLowerCase().sansAccent()
                 + '1.jpg">');
             $("#image1").html('<img src="http://www.travel-images.com/pht/'
-                + result.replace(' ', '-').toLowerCase().sansAccent()
+                + state.replace(' ', '-').toLowerCase().sansAccent()
                 + '2.jpg">');
             $("#image2").html('<img src="http://www.travel-images.com/pht/'
-                + result.replace(' ', '-').toLowerCase().sansAccent()
+                + state.replace(' ', '-').toLowerCase().sansAccent()
                 + '3.jpg">');
         }
         else
