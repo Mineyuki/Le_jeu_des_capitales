@@ -5,7 +5,16 @@
  * https://docs.bolt.cm/3.6/howto/making-sure-htaccess-works
  * https://stackoverflow.com/questions/4548860/replacing-php-ext-with-html-through-htaccess
  */
-    require_once('header.php');
+    session_start();
+    if(isset($_SESSION['connected']))
+    {
+        require_once('headerConnected.php');
+    }
+    else
+    {
+        require_once('header.php');
+    }
+
 ?>
     <div class="container-fluid center-vertical" id="secondPannel">
         <div class="row">
@@ -77,8 +86,64 @@
         </div>
     </div>
 
+    <div class="container-fluid center-vertical" id="signInPannel">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+            <form id="signInForm" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 form-vertical" action="signIn.html" method="POST">
+                <fieldset>
+                    <?php
+                    if (isset($messageSignIn))
+                    {
+                        echo '<p class="alert alert-warning">'.$messageSignIn.'</p>';
+                    }
+                    ?>
+                    <legend>Accéder à votre compte :</legend>
+                    <div class="form-group">
+                        <label for="emailSignIn">Adresse email</label>
+                        <input type="email" class="form-control" name="emailSignIn" placeholder="Votre adresse mail"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" placeholder="Votre mot de passe"/>
+                    </div>
+                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="signInForm">Connexion</button>
+                </fieldset>
+            </form>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+        </div>
+    </div>
+
+    <div class="container-fluid center-vertical" id="signUpPannel">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+            <form id="signUpForm" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 form-vertical" action="signUp.html" method="POST">
+                <fieldset>
+                    <legend>Inscription :</legend>
+                    <?php
+                    if(isset($messageSignUp))
+                    {
+                        echo '<p class="alert alert-warning">'.$messageSignUp.'</p>';
+                    }
+                    ?>
+                    <div class="form-group">
+                        <label for="emailSignUp">Adresse email</label>
+                        <input type="email" class="form-control" name="emailSignUp" placeholder="Votre adresse mail"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password1">Mot de passe</label>
+                        <input type="password" class="form-control" name="password1" placeholder="Votre mot de passe"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password2">Confirmer votre mot de passe</label>
+                        <input type="password" class="form-control" name="password2" placeholder="Confirmer votre mot de passe"/>
+                    </div>
+                    <button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary submitButton" name="signUpForm">S'inscrire</button>
+                </fieldset>
+            </form>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>
+        </div>
+    </div>
+
 <?php
-    require_once('signIn.php');
-    require_once('signUp.php');
     require_once('footer.php');
 ?>

@@ -6,7 +6,7 @@
     <link href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" rel="stylesheet">
     <!-- lien vers la bibliothèque bootstrap -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="StamenTileLayer.css" rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -22,8 +22,8 @@
             </div>
             <div class="collapse navbar-collapse" id="barre-de-navigation">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#signUp" id="signUpLink">Inscription</a></li>
-                    <li><a href="#signIn" id="signInLink">Connexion</a></li>
+                    <li><a href="#signUpPannel" id="signUpLink">Inscription</a></li>
+                    <li><a href="#signInPannel" id="signInLink">Connexion</a></li>
                 </ul>
             </div>
         </div>

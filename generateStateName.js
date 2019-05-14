@@ -8,8 +8,8 @@ $(document).ready(function()
 {
     $('#principalPannel').hide();
     $('#thirdPannel').hide();
-    $('#signUp').hide();
-    $('#signIn').hide();
+    $('#signInPannel').hide();
+    $('#signUpPannel').hide();
 
     $('#play').click(function ()
     {
@@ -37,14 +37,14 @@ $(document).ready(function()
 
     $('#signInLink').click(function ()
     {
-        $('#signUp').hide(500);
-        $('#signIn').show(1000);
+        $('#signUpPannel').hide(500);
+        $('#signInPannel').show(1000);
     });
 
     $('#signUpLink').click(function ()
     {
-        $('#signIn').hide(500);
-        $('#signUp').show(1000);
+       $('#signInPannel').hide(500);
+       $('#signUpPannel').show(1000);
     });
 
     // Pour tous les liens commençant par #.

@@ -7,6 +7,7 @@ CREATE TABLE member
     id_member   INTEGER(10)     AUTO_INCREMENT,
     mail        VARCHAR(255)    NOT NULL,
     password    VARCHAR(255)    NOT NULL,
+    signInDate  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_member)
 );
 
@@ -20,7 +21,7 @@ CREATE TABLE role
 CREATE TABLE possede_role
 (
     id_member   INTEGER(10),
-    id_role     INTEGER(10),
+    id_role     INTEGER(10) DEFAULT '2',
     PRIMARY KEY (id_member, id_role),
     FOREIGN KEY (id_member) REFERENCES member(id_member),
     FOREIGN KEY (id_role) REFERENCES role(id_role)
