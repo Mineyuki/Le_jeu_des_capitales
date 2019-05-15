@@ -55,9 +55,10 @@
                 {
                     if($password1 == $password2)
                     {
-                        $insertUser = $bd->prepare("INSERT INTO member (mail, password) VALUES (:mail, :password)");
+                        $insertUser = $bd->prepare("INSERT INTO member (mail, password, pseudo) VALUES (:mail, :password, :pseudo)");
                         $insertUser->bindValue(':mail',$email);
                         $insertUser->bindValue(':password',$password1);
+                        $insertUser->bindValue(':pseudo',$email);
                         $insertUser->execute();
 
                         $getUser = $bd->prepare("SELECT id_member FROM member WHERE mail = :mail");
@@ -75,7 +76,7 @@
                         $giveRole->execute();
 
                         $messageSignUp = 'Creation compte réussie';
-                        header('Location: index.html');
+                        header('Location: signIn.html');
                         exit();
                     }
                     else
@@ -106,6 +107,10 @@
             exit();
         }
     }
+?>
 
+    <script type="text/javascript">document.title = 'Inscription';</script>
+
+<?php
     require_once('footer.php');
 ?>

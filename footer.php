@@ -4,7 +4,7 @@
     <script src="/js/leaflet-0.7.2/leaflet.ajax.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <!-- lien vers le script contenant la fonction getXMLHttpRequest-->
-    <script type="text/javascript" src="oXHR.js"></script>
-    <script src="generateStateName.js" type="text/javascript"></script>
+    <script src="oXHR.js"></script>
+    <script src="generateStateName.js"></script>
 </body>
 </html>

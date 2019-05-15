@@ -51,6 +51,7 @@
             {
                 session_start();
                 $_SESSION['connected'] = true;
+                $_SESSION['id_member'] = $result['id_member'];
                 $_SESSION['role'] = $result['nom'];
                 header('Location: index.html');
                 exit();
@@ -69,6 +70,8 @@
             exit();
         }
     }
-
+?>
+    <script type="text/javascript">document.title = 'Connexion';</script>
+<?php
     require_once('footer.php');
 ?>

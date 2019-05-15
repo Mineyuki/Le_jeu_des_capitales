@@ -8,6 +8,7 @@ CREATE TABLE member
     id_member       INTEGER(10)     AUTO_INCREMENT,
     mail            VARCHAR(255)    NOT NULL,
     password        VARCHAR(255)    NOT NULL,
+    pseudo          VARCHAR(255)    NOT NULL,
     sign_in_date    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_member)
 );
@@ -38,7 +39,7 @@ CREATE TABLE score
     FOREIGN KEY (id_member) REFERENCES member(id_member)
 );
 
-INSERT INTO member (mail, password) VALUES ("admin@admin.fr", "d033e22ae348aeb5660fc2140aec35850c4da997");
+INSERT INTO member (mail, password, pseudo) VALUES ("admin@admin.fr", "d033e22ae348aeb5660fc2140aec35850c4da997", "admin@admin.fr");
 
 INSERT INTO role (nom) VALUES ("administrateur");
 INSERT INTO role (nom) VALUES ("utilisateur");

@@ -33,6 +33,36 @@ $(document).ready(function()
         map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 
+    $('#profilLinkPseudo').click(function ()
+    {
+       $('#profilPseudo').html('<form id="pseudoForm" class="form-vertical" action="profil.html" method="POST">' +
+           '<fieldset>' +
+           '<div class="form-group">' +
+           '<input type="text" class="form-control" name="pseudo" placeholder="Votre nouveau pseudo"/>' +
+           '</div>' +
+           '<button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="pseudoForm">Modifier</button>' +
+           '</fieldset>' +
+           '</form>');
+    });
+
+    $('#profilLinkPassword').click(function ()
+    {
+        $('#profilPassword').html('<form id="passwordForm" class="form-vertical" action="profil.html" method="POST">' +
+            '<fieldset>' +
+            '<div class="form-group">' +
+            '<input type="password" class="form-control" name="passwordOld" placeholder="Votre ancien mot de passe"/>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<input type="password" class="form-control" name="password1" placeholder="Votre nouveau mot de passe"/>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '<input type="password" class="form-control" name="password2" placeholder="Confirmer votre nouveau mot de passe"/>' +
+            '</div>' +
+            '<button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="passwordForm">Modifier</button>' +
+            '</fieldset>' +
+            '</form>');
+    });
+
     // Pour tous les liens commençant par #.
     $("a[href^='#']").click(function (e) {
         var

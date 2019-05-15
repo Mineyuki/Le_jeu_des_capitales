@@ -49,7 +49,7 @@
                     echo '<td>'.$row['mail'].'</td>';
                     echo '<td>'.$row['sign_in_date'].'</td>';
                     echo '<td>'.$row['nom'].'</td>';
-                    echo '<td><a href="tableUser.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-cog"></span></a></td>';
+                    echo '<td><a href="profil.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-cog"></span></a></td>';
                     echo '<td><a href="tableUser.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-remove"></span></a></td>';
                     echo '</tr>';
                 }
@@ -139,6 +139,10 @@
         header('Location: index.html');
         exit();
     }
+?>
 
+    <script type="text/javascript">document.title = 'Paramètre utilisateurs';</script>
+
+<?php
     require_once('footer.php');
 ?>

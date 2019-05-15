@@ -33,7 +33,7 @@
                     <?php
                             }
                     ?>
-                        <li><a href="#profil" id="profilLink">Profil</a></li>
+                        <li><a href="profil.html" id="profilLink">Profil</a></li>
                         <li><a href="logout.html">Deconnexion</a></li>
                     <?php
                         }
