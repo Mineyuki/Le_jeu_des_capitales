@@ -14,6 +14,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <td>Jeu</td>
                     <td>Score</td>
                     <td>Date</td>
                 </tr>
@@ -40,12 +41,14 @@
                     $offset = 0;
                 }
 
-                $query = $bd->prepare("SELECT * FROM score WHERE id_member := id ORDER BY point DESC LIMIT $offset, $limit");
-                $request->bindValue(':id', $_SESSION['id_member']);
+                $query = $bd->prepare("SELECT * FROM score JOIN from_game USING (id_score) JOIN game USING (id_game) WHERE id_member = :id ORDER BY name_game, point DESC LIMIT $offset,$limit");
+                $query->bindValue(':id',$_SESSION['id_member']);
                 $query->execute();
+
                 while($row = $query->fetch(PDO::FETCH_ASSOC))
                 {
                     echo '<tr>';
+                    echo '<td>'.$row['name_game'].'</td>';
                     echo '<td>'.$row['point'].'</td>';
                     echo '<td>'.$row['score_date'].'</td>';
                     echo '</tr>';

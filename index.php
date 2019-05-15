@@ -15,13 +15,25 @@
         </div>
     </div>
 
-    <div class="container-fluid center-vertical" id="thirdPannel">
+    <div class="container" id="thirdPannel">
         <div class="row">
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
-            <button type="button" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 btn btn-primary" id="playState">Pays</button>
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"></div>
-            <button type="button" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 btn btn-primary" id="playCapital">Capitale</button>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
+            <div class="well well-lg">
+                <p class="text-center">Jeux disponible</p>
+            </div>
+        </div>
+        <div class="row">
+            <?php
+                require_once('identificationBDD.php');
+
+                $request = $bd->prepare("SELECT * FROM game");
+                $request->execute();
+                while($row = $request->fetch(PDO::FETCH_ASSOC))
+                {
+            ?>
+                    <button type="button" id="<?php echo $row['name_game'];?>" class="col-xs-12 col-sm-2 col-sm-offset-3 col-md-3 col-md-offset-2 col-lg-3 col-lg-offset-2 btn btn-primary"><?php echo $row['name_game'];?></button>
+            <?php
+                }
+            ?>
         </div>
     </div>
 

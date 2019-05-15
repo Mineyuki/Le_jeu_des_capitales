@@ -15,7 +15,7 @@ $(document).ready(function()
         $('#thirdPannel').show(1000);
     });
 
-    $('#playState').click(function ()
+    $('#Capitale').click(function ()
     {
         $('#thirdPannel').hide(500);
         $('#principalPannel').show(1000);
@@ -24,7 +24,7 @@ $(document).ready(function()
         map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 
-    $('#playCapital').click(function ()
+    $('#Pays').click(function ()
     {
         $('#thirdPannel').hide(500);
         $('#principalPannel').show(1000);
@@ -100,17 +100,6 @@ $(document).ready(function()
     });
 });
 
-function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-
 /*
 ************************************************************************************************************************
 * Fonction pour recuperer les donnees dans un fichier JSON
@@ -152,12 +141,12 @@ function readNext()
 {
     var lengthWorld = world.length;
     index = getRandomInt(lengthWorld);
-    if($('#playState').data('clicked'))
+    if($('#Pays').data('clicked'))
     {
         $('#nameQuestion').text((world[index].name).common);
         map.setZoom(2);
     }
-    else if ($('#playCapital').data('clicked'))
+    else if ($('#Capitale').data('clicked'))
     {
         $('#nameQuestion').text(world[index].capital);
         existCity(world[index].capital);
@@ -237,7 +226,7 @@ function onMapClick(e) {
             clickMap = 1; // Efface la reponse
             latlong = e.latlng; // Recupere les coordonnes de la carte
 
-            if($('#playState').data('clicked'))
+            if($('#Pays').data('clicked'))
             { // Si on est au questionnaire des pays
                 map.setZoom(2); // Zoom a 2
                 coordinates = world[index].latlng; // coordonnes du pays
@@ -253,7 +242,7 @@ function onMapClick(e) {
                 .openOn(map);
                 updateScore(distance, radiusState);
             }
-            else if ($('#playCapital').data('clicked'))
+            else if ($('#Capitale').data('clicked'))
             { // Si on est au questionnaire des capitales
                 map.setZoom(6); // Zoom a 6
                 result = world[index].capital; // Reponse a la question
@@ -293,7 +282,7 @@ function onMapClick(e) {
             clickMap = 0; // Donne la reponse
             counter = counter + 1; // Incremente le compteur de question
             map.removeLayer(circle); // Enleve le cercle concentrique
-            if ($('#playCapital').data('clicked'))
+            if ($('#Capitale').data('clicked'))
             {
                 map.removeLayer(contour); // Enleve le contour
             }
@@ -302,9 +291,25 @@ function onMapClick(e) {
             { // N'affiche pas la question apres la derniere
                 executeRequest(readNext); // Pays suivant
             }
+            else
+            {
+                if($('#Pays').data('clicked'))
+                {
+                    $.post("saveScore.html", {point : score, game : "Pays"}, function ()
+                    {
+                        document.location.href="index.html";
+                    });
+                }
+                else if($('#Capitale').data('clicked'))
+                {
+                    $.post("saveScore.html", {point : score, game : "Capitale"}, function ()
+                    {
+                        document.location.href="index.html";
+                    });
+                }
+            }
         }
     }
-
 }
 
 /*

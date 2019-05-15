@@ -1,5 +1,7 @@
-DROP TABLE IF EXISTS score;
+DROP TABLE IF EXISTS from_game;
 DROP TABLE IF EXISTS have_role;
+DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS score;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS member;
 
@@ -31,12 +33,28 @@ CREATE TABLE have_role
 
 CREATE TABLE score
 (
-    id_score    INTEGER(10),
+    id_score    INTEGER(10)     AUTO_INCREMENT,
     id_member   INTEGER(10),
-    point       INTEGER(10) NOT NULL,
-    score_date  TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    point       INTEGER(10)     NOT NULL,
+    score_date  TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id_score),
     FOREIGN KEY (id_member) REFERENCES member(id_member)
+);
+
+CREATE TABLE game
+(
+    id_game     INTEGER(10)     AUTO_INCREMENT,
+    name_game   VARCHAR(255)    NOT NULL,
+    PRIMARY KEY (id_game)
+);
+
+CREATE TABLE from_game
+(
+    id_score    INTEGER(10),
+    id_game     INTEGER(10),
+    PRIMARY KEY (id_score, id_game),
+    FOREIGN KEY (id_score) REFERENCES score(id_score),
+    FOREIGN KEY (id_game) REFERENCES game(id_game)
 );
 
 INSERT INTO member (mail, password, pseudo) VALUES ("admin@admin.fr", "d033e22ae348aeb5660fc2140aec35850c4da997", "admin@admin.fr");
@@ -45,3 +63,6 @@ INSERT INTO role (nom) VALUES ("administrateur");
 INSERT INTO role (nom) VALUES ("utilisateur");
 
 INSERT INTO have_role (id_member, id_role) VALUES (1,1);
+
+INSERT INTO game (name_game) VALUES ("Capitale");
+INSERT INTO game (name_game) VALUES ("Pays");

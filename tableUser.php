@@ -15,10 +15,10 @@
         <table class="table">
             <thead>
                 <tr>
+                    <td>Pseudo</td>
                     <td>Email</td>
                     <td>Date de création</td>
                     <td>Privilège</td>
-                    <td>Modifier</td>
                     <td>Supprimer</td>
                 </tr>
             </thead>
@@ -44,15 +44,15 @@
                     $offset = 0;
                 }
 
-                $query = $bd->prepare("SELECT * FROM member JOIN have_role USING (id_member) JOIN role USING (id_role) LIMIT $offset, $limit");
+                $query = $bd->prepare("SELECT * FROM member JOIN have_role USING (id_member) JOIN role USING (id_role) ORDER BY pseudo LIMIT $offset, $limit");
                 $query->execute();
                 while($row = $query->fetch(PDO::FETCH_ASSOC))
                 {
                     echo '<tr>';
+                    echo '<td>'.$row['pseudo'].'</td>';
                     echo '<td>'.$row['mail'].'</td>';
                     echo '<td>'.$row['sign_in_date'].'</td>';
                     echo '<td>'.$row['nom'].'</td>';
-                    echo '<td><a href="profil.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-cog"></span></a></td>';
                     echo '<td><a href="tableUser.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-remove"></span></a></td>';
                     echo '</tr>';
                 }
