@@ -1,5 +1,5 @@
 <?php
-    require_once('header.php');
+    require_once('head.php');
 ?>
     <div class="container-fluid" id="signUpPannel">
         <div class="row">
@@ -8,9 +8,9 @@
                 <fieldset>
                     <legend>Inscription :</legend>
                     <?php
-                    if(isset($messageSignUp))
+                    if(isset($_GET['messageSignUp']) && trim($_GET['messageSignUp']) != "")
                     {
-                        echo '<p class="alert alert-warning">'.$messageSignUp.'</p>';
+                        echo '<p class="alert alert-warning">'.$_GET['messageSignUp'].'</p>';
                     }
                     ?>
                     <div class="form-group">
@@ -75,27 +75,35 @@
                         $giveRole->execute();
 
                         $messageSignUp = 'Creation compte réussie';
-                        unset($_COOKIE['message']);
                         header('Location: index.html');
+                        exit();
                     }
                     else
                     {
                         $messageSignUp = 'Mot de passe différent !';
+                        header('Location: header.html?url=signUp.html?messageSignUp='.$messageSignUp);
+                        exit();
                     }
                 }
                 else
                 {
                     $messageSignUp = 'Compte existant !';
+                    header('Location: header.html?url=signUp.html?messageSignUp='.$messageSignUp);
+                    exit();
                 }
             }
             else
             {
                 $messageSignUp = 'Adresse mail non valide !';
+                header('Location: header.html?url=signUp.html?messageSignUp='.$messageSignUp);
+                exit();
             }
         }
         else
         {
             $messageSignUp = 'Veuillez renseigner les champs !';
+            header('Location: header.html?url=signUp.html?messageSignUp='.$messageSignUp);
+            exit();
         }
     }
 

@@ -5,7 +5,7 @@
  * https://docs.bolt.cm/3.6/howto/making-sure-htaccess-works
  * https://stackoverflow.com/questions/4548860/replacing-php-ext-with-html-through-htaccess
  */
-    require_once('header.php');
+    require_once('head.php');
 ?>
     <div class="container-fluid center-vertical" id="secondPannel">
         <div class="row">

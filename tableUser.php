@@ -3,7 +3,7 @@
      * Documentation :
      * http://www.mitrajit.com/bootstrap-pagination-in-php-and-mysql/
      */
-    require_once('header.php');
+    require_once('head.php');
     if($_SESSION['role']=='administrateur')
     {
 ?>
@@ -130,12 +130,14 @@
             $request->bindValue(':id_member',$_GET['id']);
             $request->execute();
 
-            header('Location: tableUser.php');
+            header('Location: header.html?url=tableUser.html');
+            exit();
         }
     }
     else
     {
         header('Location: index.html');
+        exit();
     }
 
     require_once('footer.php');

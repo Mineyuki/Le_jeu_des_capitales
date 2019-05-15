@@ -1,5 +1,5 @@
 <?php
-    require_once('header.php');
+    require_once('head.php');
 ?>
 
     <div class="container-fluid" id="signInPannel">
@@ -8,9 +8,9 @@
             <form id="signInForm" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 form-vertical" action="signIn.html" method="POST">
                 <fieldset>
                     <?php
-                    if (isset($messageSignIn))
+                    if (isset($_GET['messageSignIn']) && trim($_GET['messageSignIn']) != "")
                     {
-                        echo '<p class="alert alert-warning">'.$messageSignIn.'</p>';
+                        echo '<p class="alert alert-warning">'.$_GET['messageSignIn'].'</p>';
                     }
                     ?>
                     <legend>Accéder à votre compte :</legend>
@@ -53,15 +53,20 @@
                 $_SESSION['connected'] = true;
                 $_SESSION['role'] = $result['nom'];
                 header('Location: index.html');
+                exit();
             }
             else
             {
                 $messageSignIn = 'Mauvais adresse mail ou mot de passe!';
+                header('Location: header.html?url=signIn.html?messageSignIn='.$messageSignIn);
+                exit();
             }
         }
         else
         {
             $messageSignIn = 'Veuillez remplir les champs !';
+            header('Location: header.html?url=signIn.html?messageSignIn='.$messageSignIn);
+            exit();
         }
     }
 
