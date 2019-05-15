@@ -8,9 +8,9 @@
             <form id="signInForm" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 form-vertical" action="signIn.html" method="POST">
                 <fieldset>
                     <?php
-                    if (isset($_COOKIE['signInMessage']))
+                    if (isset($messageSignIn))
                     {
-                        echo '<p class="alert alert-warning">'.$_COOKIE['signInMessage'].'</p>';
+                        echo '<p class="alert alert-warning">'.$messageSignIn.'</p>';
                     }
                     ?>
                     <legend>Accéder à votre compte :</legend>
@@ -40,7 +40,7 @@
             $email = htmlspecialchars($_POST['emailSignIn']);
             $password = sha1($_POST['password']);
 
-            $request = $bd->prepare("SELECT * FROM member WHERE mail = :mail AND password = :password");
+            $request = $bd->prepare("SELECT * FROM member JOIN have_role USING (id_member) JOIN role USING (id_role) WHERE mail = :mail AND password = :password");
             $request->bindValue(':mail',$email);
             $request->bindValue(':password',$password);
             $request->execute();
@@ -51,7 +51,7 @@
             {
                 session_start();
                 $_SESSION['connected'] = true;
-                unset($_COOKIE['message']);
+                $_SESSION['role'] = $result['nom'];
                 header('Location: index.html');
             }
             else
@@ -64,8 +64,6 @@
             $messageSignIn = 'Veuillez remplir les champs !';
         }
     }
-
-    setcookie("signInMessage", $messageSignIn, time()+60, null, null, false, true);
 
     require_once('footer.php');
 ?>

@@ -16,13 +16,13 @@
             <tbody id="tableUser">
             <?php
                 require_once('identificationBDD.php');
-                $request = $bd->prepare("SELECT * FROM member");
+                $request = $bd->prepare("SELECT * FROM member JOIN have_role USING (id_member)");
                 $request->execute();
 
                 while($row = $request->fetch(PDO::FETCH_ASSOC))
                 {
                     echo '<tr>
-                            <td>'.$row['email'].'</td>
+                            <td>'.$row['mail'].'</td>
                             <td>'.$row['sign_in_date'].'</td>
                             <td><button type="button" class="btn btn-danger">Supprimer</button></td>
                         </tr>';
