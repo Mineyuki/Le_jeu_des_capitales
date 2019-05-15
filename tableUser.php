@@ -15,7 +15,8 @@
                     <td>Email</td>
                     <td>Date de création</td>
                     <td>Privilège</td>
-                    <td></td>
+                    <td>Modifier</td>
+                    <td>Supprimer</td>
                 </tr>
             </thead>
             <tbody id="tableUser">
@@ -29,7 +30,7 @@
                 $total_rows = $request->fetch(PDO::FETCH_ASSOC);
                 $total_pages = ceil($total_rows['total_rows']/$limit);
 
-                if(isset($_GET['page']) && $_GET['page'] != "")
+                if(isset($_GET['page']) && trim($_GET['page']) != "")
                 {
                     $page = $_GET['page'];
                     $offset = $limit * ($page -1);
@@ -48,7 +49,8 @@
                     echo '<td>'.$row['mail'].'</td>';
                     echo '<td>'.$row['sign_in_date'].'</td>';
                     echo '<td>'.$row['nom'].'</td>';
-                    echo '<td><button type="button" class="btn btn-danger">Supprimer</button></td>';
+                    echo '<td><a href="tableUser.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-cog"></span></a></td>';
+                    echo '<td><a href="tableUser.html?id='.$row['id_member'].'"><span class="glyphicon glyphicon-remove"></span></a></td>';
                     echo '</tr>';
                 }
 
@@ -114,6 +116,22 @@
     </div>
 
 <?php
+        if(isset($_GET['id']) && trim($_GET['id']) != "")
+        {
+            $request = $bd->prepare("DELETE FROM have_role WHERE id_member = :id_member");
+            $request->bindValue(':id_member',$_GET['id']);
+            $request->execute();
+
+            $request = $bd->prepare("DELETE FROM score WHERE id_member = :id_member");
+            $request->bindValue(':id_member',$_GET['id']);
+            $request->execute();
+
+            $request = $bd->prepare("DELETE FROM member WHERE id_member = :id_member");
+            $request->bindValue(':id_member',$_GET['id']);
+            $request->execute();
+
+            header('Location: tableUser.php');
+        }
     }
     else
     {
