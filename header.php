@@ -22,8 +22,29 @@
             </div>
             <div class="collapse navbar-collapse" id="barre-de-navigation">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#signUpPannel" id="signUpLink">Inscription</a></li>
-                    <li><a href="#signInPannel" id="signInLink">Connexion</a></li>
+                    <?php
+                        session_start();
+                        if(isset($_SESSION['connected']))
+                        {
+                            if($_SESSION['role']=='administrateur')
+                            {
+                    ?>
+                        <li><a href="tableUser.html">Paramètre utilisateurs</a></li>
+                    <?php
+                            }
+                    ?>
+                        <li><a href="#profil" id="profilLink">Profil</a></li>
+                        <li><a href="logout.html">Deconnexion</a></li>
+                    <?php
+                        }
+                        else
+                        {
+                    ?>
+                        <li><a href="signUp.html" id="signUpLink">Inscription</a></li>
+                        <li><a href="signIn.html" id="signInLink">Connexion</a></li>
+                    <?php
+                        }
+                    ?>
                 </ul>
             </div>
         </div>
