@@ -8,7 +8,10 @@
     {
 ?>
 
-    <div class="container" id="">
+    <div class="container">
+        <div class="well well-lg">
+            <p class="text-center">Utilisateurs</p>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -19,7 +22,7 @@
                     <td>Supprimer</td>
                 </tr>
             </thead>
-            <tbody id="tableUser">
+            <tbody>
             <?php
                 require_once('identificationBDD.php');
                 $limit = 5;
@@ -141,7 +144,7 @@
     }
 ?>
 
-    <script type="text/javascript">document.title = 'Paramètre utilisateurs';</script>
+    <script>document.title = 'Paramètre utilisateurs';</script>
 
 <?php
     require_once('footer.php');

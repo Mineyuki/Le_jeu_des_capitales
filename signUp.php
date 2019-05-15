@@ -109,7 +109,7 @@
     }
 ?>
 
-    <script type="text/javascript">document.title = 'Inscription';</script>
+    <script>document.title = 'Inscription';</script>
 
 <?php
     require_once('footer.php');

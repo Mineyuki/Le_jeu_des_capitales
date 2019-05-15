@@ -71,7 +71,7 @@
         }
     }
 ?>
-    <script type="text/javascript">document.title = 'Connexion';</script>
+    <script>document.title = 'Connexion';</script>
 <?php
     require_once('footer.php');
 ?>

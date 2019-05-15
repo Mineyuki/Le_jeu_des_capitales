@@ -18,7 +18,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand navbar-center" href="index.html">THE GAME</a>
+                <a class="navbar-brand" href="index.html">THE GAME</a>
             </div>
             <div class="collapse navbar-collapse" id="barre-de-navigation">
                 <ul class="nav navbar-nav navbar-right">
@@ -33,6 +33,7 @@
                     <?php
                             }
                     ?>
+                        <li><a href="score.html">Score</a></li>
                         <li><a href="profil.html" id="profilLink">Profil</a></li>
                         <li><a href="logout.html">Deconnexion</a></li>
                     <?php
