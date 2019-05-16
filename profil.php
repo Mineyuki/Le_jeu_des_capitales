@@ -5,7 +5,8 @@
     require_once('identificationBDD.php');
 
     if($_SESSION['connected'])
-    {
+    { // Si on est connecte
+        // Prepare la requete
         $request = $bd->prepare("SELECT * FROM member WHERE id_member = :id");
         $request->bindValue(':id',$_SESSION['id_member']);
         $request->execute();

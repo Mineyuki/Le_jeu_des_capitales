@@ -13,7 +13,7 @@
         $bd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     catch (PDOException $e)
-    {
+    { // En cas d'erreur lors de la connexion a la base, affichage d'un probleme
         die('<p>La connexion a échoué ! Erreur ['.$e->getCode().'] : '.$e->getMessage().'</p>');
     }
 ?>

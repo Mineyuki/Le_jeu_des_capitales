@@ -1,35 +1,35 @@
 body
-{
+{ /* Changement couleur de fond du site */
     background-color: #FFFFE0;
 }
 
 .div-padding-top-10
-{
+{ /* Espacement de 10vh du haut de l'ecran */
     padding-top: 10vh;
 }
 
 .center-vertical
-{
+{ /* Espacement de 40vh du haut et 40vh du bas de l'ecran */
     padding-top: 40vh;
     padding-bottom: 40vh;
 }
 
 .height-70
-{
+{ /* Hauteur de 70vh */
     height: 70vh;
 }
 
 .height-40
-{
+{ /* Hauteur de 40vh */
     height: 40vh;
 }
 
 #wikipedia
-{
+{ /* Espacement vers le haut de 5vh */
     padding-top: 5vh;
 }
 
 .button-padding-bottom
-{
+{ /* Espacement des boutons vers le bas de 1vh */
     padding-bottom: 1vh;
 }

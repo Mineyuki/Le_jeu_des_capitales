@@ -6,35 +6,37 @@
  */
 $(document).ready(function()
 {
-    $('#principalPannel').hide();
-    $('#thirdPannel').hide();
+    $('#principalPannel').hide(); // Cache un pannel
+    $('#thirdPannel').hide(); // Cache un pannel
 
     $('#play').click(function ()
-    {
-        $('#secondPannel').hide(500);
-        $('#thirdPannel').show(1000);
+    { // Au moment du click
+        $('#secondPannel').hide(500); // Cache un pannel avec un delais de 500 ms
+        $('#thirdPannel').show(1000); // Montre un pannel avec un delais de 1000 ms
     });
 
     $('#Capitale').click(function ()
-    {
-        $('#thirdPannel').hide(500);
-        $('#principalPannel').show(1000);
-        $(this).data('clicked', true);
-        executeRequest(readNext);
+    { // Au moment du click
+        $('#thirdPannel').hide(500); // Cache un pannel avec un delais de 500 ms
+        $('#principalPannel').show(1000); // Montre un pannel avec un delais de 1000 ms
+        $('#typeQuestion').text('Capitale');
+        $(this).data('clicked', true); // Met un drapeau TRUE en donnee temporaire
+        executeRequest(readNext); // Affiche la question
         map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 
     $('#Pays').click(function ()
-    {
-        $('#thirdPannel').hide(500);
-        $('#principalPannel').show(1000);
-        $(this).data('clicked', true);
-        executeRequest(readNext);
+    { // Au moment du click
+        $('#thirdPannel').hide(500); // Cache un pannel avec un delais de 500 ms
+        $('#principalPannel').show(1000); // Montre un pannel avec un delais de 1000 ms
+        $('#typeQuestion').text('Pays');
+        $(this).data('clicked', true); // Met un drapeau TRUE en donnee temporaire
+        executeRequest(readNext); // Affiche la question
         map.addLayer(coucheStamenWatercolor); // Affichage de la carte
     });
 
     $('#profilLinkPseudo').click(function ()
-    {
+    { // Au moment du click
        $('#profilPseudo').html('<form id="pseudoForm" class="form-vertical" action="profil.html" method="POST">' +
            '<fieldset>' +
            '<div class="form-group">' +
@@ -42,11 +44,11 @@ $(document).ready(function()
            '</div>' +
            '<button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="pseudoForm">Modifier</button>' +
            '</fieldset>' +
-           '</form>');
+           '</form>'); // Ajoute un formulaire
     });
 
     $('#profilLinkPassword').click(function ()
-    {
+    { // au moment du click
         $('#profilPassword').html('<form id="passwordForm" class="form-vertical" action="profil.html" method="POST">' +
             '<fieldset>' +
             '<div class="form-group">' +
@@ -60,7 +62,7 @@ $(document).ready(function()
             '</div>' +
             '<button type="submit" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-primary" name="passwordForm">Modifier</button>' +
             '</fieldset>' +
-            '</form>');
+            '</form>'); // Ajoute un formulaire
     });
 
     // Pour tous les liens commençant par #.
@@ -106,16 +108,16 @@ $(document).ready(function()
 ************************************************************************************************************************
  */
 
-var index = 0;
-var world = [];
+var index = 0; // Index du tableau des donnees recupere
+var world = []; // Tableau des donnees a recuperer
 
 function getRandomInt(max)
-{
+{ // Retourne une valeure aleatoire
     return Math.floor(Math.random() * Math.floor(max));
 }
 
 function executeRequest(callback)
-{
+{ // Recupere les donnees du JSON
     if(world.length === 0)
     {
         var xhr = getXMLHttpRequest();
@@ -138,20 +140,23 @@ function executeRequest(callback)
 }
 
 function readNext()
-{
-    var lengthWorld = world.length;
-    index = getRandomInt(lengthWorld);
+{ // Lit la donnee suivante au hasard
+    var lengthWorld = world.length; // Taille du tableau
+
+    index = getRandomInt(lengthWorld); // Prend une valeur aleatoire
+
     if($('#Pays').data('clicked'))
-    {
-        $('#nameQuestion').text((world[index].name).common);
-        map.setZoom(2);
+    { // Si on a clique sur la question du pays
+        $('#nameQuestion').text(world[index].capital); // Affichage capitale
+        existCity(world[index].capital); // Fonction verifiant l'existance de la capitale
+        map.setZoom(2); // Zoom a 2
     }
     else if ($('#Capitale').data('clicked'))
     {
-        $('#nameQuestion').text(world[index].capital);
-        existCity(world[index].capital);
-        map.setView(new L.LatLng(world[index].latlng[0],world[index].latlng[1]), 6);
-        circleState(world[index].cca3);
+        $('#nameQuestion').text((world[index].name).common); // Affichage pays
+        existCity(world[index].capital); // Fonction verifiant l'existance de la capitale
+        map.setView(new L.LatLng(world[index].latlng[0],world[index].latlng[1]), 6); // Centre la carte
+        circleState(world[index].cca3); // Entoure le pays
     }
 }
 
@@ -292,18 +297,18 @@ function onMapClick(e) {
                 executeRequest(readNext); // Pays suivant
             }
             else
-            {
+            { // Si on a depasse le quota de question
                 if($('#Pays').data('clicked'))
-                {
+                { // On enregistre le score
                     $.post("saveScore.html", {point : score, game : "Pays"}, function ()
-                    {
+                    { // Si la requete a ete reussie, on se redirige vers la page
                         document.location.href="index.html";
                     });
                 }
                 else if($('#Capitale').data('clicked'))
-                {
+                { // On enreigistre le score
                     $.post("saveScore.html", {point : score, game : "Capitale"}, function ()
-                    {
+                    { // Si la requete a ete reussie, on se redirige vers la page
                         document.location.href="index.html";
                     });
                 }
@@ -372,9 +377,9 @@ function getCoordinatesCity(capital, e)
 function existCity(capital)
 {
     $.getJSON("geojson-world-master/capitals.geo.json", function (data)
-    {
+    { // Charge le fichier GEO.JSON
         if((data.features).find(state => state.properties.city === capital[0]) == undefined)
-        {
+        { // Si la capitale n'existe pas, on change de pays
             readNext();
         }
     });
@@ -387,65 +392,65 @@ function existCity(capital)
  */
 function updateScore(distance, radius)
 {
-    radius = radius / 1000;
+    radius = radius / 1000; // Rayon divise pour revenir en metre
 
     if(distance == 0)
-    {
+    { // Si on est pile sur le point, on gagne 100 points
         score = score + 100;
     }
     else if (distance <= radius * 0.10)
-    {
+    { // Si on est a <10% de la distance, on gagne 90 points
         score = score + 90;
     }
     else if (distance <= radius * 0.20)
-    {
+    { // Si on est a <20% de la distance, on gagne 80 points
         score = score + 80;
     }
     else if (distance <= radius * 0.30)
-    {
+    { // Si on est a <30% de la distance, on gagne 70 points
         score = score + 70;
     }
     else if (distance <= radius * 0.40)
-    {
+    { // Si on est a <40% de la distance, on gagne 60 points
         score = score + 60;
     }
     else if (distance <= radius * 0.50)
-    {
+    { // Si on est a <50% de la distance, on gagne 50 points
         score = score + 50;
     }
     else if (distance <= radius * 0.60)
-    {
+    { // Si on est a <60% de la distance, on gagne 40 points
         score = score + 40;
     }
     else if (distance <= radius * 0.70)
-    {
+    { // Si on est a <70% de la distance, on gagne 30 points
         score = score + 30;
     }
     else if (distance <= radius * 0.80)
-    {
+    { // Si on est a <80% de la distance, on gagne 20 points
         score = score + 20;
     }
     else if (distance <= radius * 0.90)
-    {
+    { // Si on est a <90% de la distance, on gagne 10 points
         score = score + 10;
     }
     else if (distance <= radius)
-    {
+    { // Si on est a <100% de la distance, on gagne 1 points
         score = score + 1;
     }
     else
-    {
+    { // Si on est au-dela, on gagne aucun point
         score = score + 0;
     }
 
-    $('#score').text(score);
+    $('#score').text(score); // Affichage du score
 }
 
 // Association Evenement/Fonction handler
 map.on('click', onMapClick);
 
 String.prototype.sansAccent = function()
-{
+{ // Enleve tous les accents
     var accent = [
         /[\300-\306]/g, /[\340-\346]/g, // A, a
         /[\310-\313]/g, /[\350-\353]/g, // E, e
@@ -463,4 +468,4 @@ String.prototype.sansAccent = function()
     }
 
     return str;
-}
+};

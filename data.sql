@@ -1,3 +1,6 @@
+/*
+ * Suppression des tables existants
+ */
 DROP TABLE IF EXISTS from_game;
 DROP TABLE IF EXISTS have_role;
 DROP TABLE IF EXISTS game;
@@ -5,6 +8,7 @@ DROP TABLE IF EXISTS score;
 DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS member;
 
+/* Creation table des membres */
 CREATE TABLE member
 (
     id_member       INTEGER(10)     AUTO_INCREMENT,
@@ -15,6 +19,7 @@ CREATE TABLE member
     PRIMARY KEY (id_member)
 );
 
+/* Creation table des privileges */
 CREATE TABLE role
 (
     id_role     INTEGER(10)     AUTO_INCREMENT,
@@ -22,6 +27,7 @@ CREATE TABLE role
     PRIMARY KEY (id_role)
 );
 
+/* Creation table des privileges des membres */
 CREATE TABLE have_role
 (
     id_member   INTEGER(10),
@@ -31,6 +37,7 @@ CREATE TABLE have_role
     FOREIGN KEY (id_role) REFERENCES role(id_role)
 );
 
+/* Creation table des scores */
 CREATE TABLE score
 (
     id_score    INTEGER(10)     AUTO_INCREMENT,
@@ -41,6 +48,7 @@ CREATE TABLE score
     FOREIGN KEY (id_member) REFERENCES member(id_member)
 );
 
+/* Creation table des jeux */
 CREATE TABLE game
 (
     id_game     INTEGER(10)     AUTO_INCREMENT,
@@ -48,6 +56,7 @@ CREATE TABLE game
     PRIMARY KEY (id_game)
 );
 
+/* Creation table de lien avec les jeux et les scores */
 CREATE TABLE from_game
 (
     id_score    INTEGER(10),
@@ -57,6 +66,9 @@ CREATE TABLE from_game
     FOREIGN KEY (id_game) REFERENCES game(id_game)
 );
 
+/*
+ * Insertion valeur par defaut
+ */
 INSERT INTO member (mail, password, pseudo) VALUES ("admin@admin.fr", "d033e22ae348aeb5660fc2140aec35850c4da997", "admin@admin.fr");
 
 INSERT INTO role (nom) VALUES ("administrateur");
