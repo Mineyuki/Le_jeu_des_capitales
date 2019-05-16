@@ -6,6 +6,8 @@
  */
 $(document).ready(function()
 {
+    $('#rayonCapitales').text(radiusCity); // Ajout de texte
+    $('#rayonPays').text(radiusState); // Ajout de texte
     $('#principalPannel').hide(); // Cache un pannel
     $('#thirdPannel').hide(); // Cache un pannel
 

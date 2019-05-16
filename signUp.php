@@ -38,13 +38,13 @@
 
     if(isset($_POST['signUpForm']))
     {
-        if(trim($_POST['emailSignUp']) != "" and
-        trim($_POST['password1']) != "" and
-        trim($_POST['password2']) != "")
+        if(securisation($_POST['emailSignUp']) != "" and
+        securisation($_POST['password1']) != "" and
+        securisation($_POST['password2']) != "")
         {
-            $email = htmlspecialchars($_POST['emailSignUp']);
-            $password1 = sha1($_POST['password1']);
-            $password2 = sha1($_POST['password2']);
+            $email = securisation(htmlspecialchars($_POST['emailSignUp']));
+            $password1 = sha1(securisation($_POST['password1']));
+            $password2 = sha1(securisation($_POST['password2']));
 
             if(filter_var($email, FILTER_VALIDATE_EMAIL))
             {

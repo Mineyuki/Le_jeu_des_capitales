@@ -34,11 +34,11 @@
 
     if(isset($_POST['signInForm']))
     {
-        if(trim($_POST['emailSignIn']) != "" and
-        trim($_POST['password']) != "")
+        if(securisation($_POST['emailSignIn']) != "" and
+        securisation($_POST['password']) != "")
         {
-            $email = htmlspecialchars($_POST['emailSignIn']);
-            $password = sha1($_POST['password']);
+            $email = securisation(htmlspecialchars($_POST['emailSignIn']));
+            $password = sha1(securisation($_POST['password']));
 
             $request = $bd->prepare("SELECT * FROM member JOIN have_role USING (id_member) JOIN role USING (id_role) WHERE mail = :mail AND password = :password");
             $request->bindValue(':mail',$email);

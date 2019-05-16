@@ -16,4 +16,12 @@
     { // En cas d'erreur lors de la connexion a la base, affichage d'un probleme
         die('<p>La connexion a échoué ! Erreur ['.$e->getCode().'] : '.$e->getMessage().'</p>');
     }
+
+    function securisation($donnees)
+    {
+        $donnees = trim($donnees);
+        $donnees = stripslashes($donnees);
+        $donnees = strip_tags($donnees);
+        return $donnees;
+    }
 ?>
